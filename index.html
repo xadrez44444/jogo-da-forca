@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Forca do GitHub</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        #palavra { font-size: 2em; letter-spacing: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Forca</h1>
+    <div id="palavra">_ _ _ _ _</div>
+    <p>Erros: <span id="erros">0</span>/6</p>
+    <input type="text" id="letra" maxlength="1">
+    <button onclick="chutar()">Chutar</button>
+
+    <script>
+        let secreta = "GITHUB";
+        let exibicao = ["_", "_", "_", "_", "_", "_"];
+        let erros = 0;
+
+        function chutar() {
+            let letra = document.getElementById("letra").value.toUpperCase();
+            document.getElementById("letra").value = "";
+            
+            if (secreta.includes(letra)) {
+                for(let i=0; i<secreta.length; i++) {
+                    if(secreta[i] === letra) exibicao[i] = letra;
+                }
+            } else {
+                erros++;
+            }
+            
+            document.getElementById("palavra").innerText = exibicao.join(" ");
+            document.getElementById("erros").innerText = erros;
+
+            if (!exibicao.includes("_")) alert("Você venceu!");
+            if (erros >= 6) alert("Game Over!");
+        }
+    </script>
+</body>
+</html>
