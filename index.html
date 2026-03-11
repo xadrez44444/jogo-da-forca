@@ -4,61 +4,91 @@
     <meta charset="UTF-8">
     <title>Jogo da Forca - XANDE</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f4; }
-        #palavra { font-size: 3em; letter-spacing: 15px; margin: 20px; font-weight: bold; color: #333; }
-        .status { margin: 20px; font-size: 1.2em; }
-        input { padding: 10px; font-size: 1.2em; width: 50px; text-align: center; }
-        button { padding: 10px 20px; font-size: 1.2em; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding-top: 50px; background-color: #e9ecef; color: #333; }
+        .container { background: white; max-width: 500px; margin: 0 auto; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; }
+        #palavra { font-size: 3.5em; letter-spacing: 10px; margin: 30px 0; font-family: monospace; font-weight: bold; }
+        .status { margin-bottom: 20px; font-size: 1.1em; }
+        .letras-usadas { color: #7f8c8d; font-size: 0.9em; margin-top: 10px; }
+        input { padding: 12px; font-size: 1.2em; width: 60px; text-align: center; border: 2px solid #bdc3c7; border-radius: 8px; outline: none; }
+        input:focus { border-color: #3498db; }
+        button { padding: 12px 25px; font-size: 1.2em; cursor: pointer; background: #27ae60; color: white; border: none; border-radius: 8px; transition: 0.3s; }
+        button:hover { background: #219150; }
     </style>
 </head>
 <body>
 
-    <h1>🎮 Jogo da Forca</h1>
+    <div class="container">
+        <h1>🎮 Jogo da Forca</h1>
 
-    <div id="palavra">_ _ _ _ _</div>
+        <div id="palavra">_ _ _ _ _</div>
 
-    <div class="status">
-        Erros: <span id="erros" style="color: red;">0</span> / 6
+        <div class="status">
+            Erros: <span id="erros" style="color: #e74c3c; font-weight: bold;">0</span> / 6
+        </div>
+
+        <div class="input-area">
+            <input type="text" id="letra" maxlength="1" autofocus autocomplete="off">
+            <button onclick="chutar()">Chutar</button>
+        </div>
+
+        <div class="letras-usadas">
+            Letras tentadas: <span id="tentativas"></span>
+        </div>
     </div>
 
-    <input type="text" id="letra" maxlength="1" autofocus>
-    <button onclick="chutar()">Chutar</button>
-
     <script>
-        // Configurações
         const secreta = "XANDE";
-        let exibicao = ["_", "_", "_", "_", "_"];
+        let exibicao = Array(secreta.length).fill("_");
         let erros = 0;
+        let letrasTentadas = [];
+
+        const input = document.getElementById("letra");
+
+        // Permite usar a tecla ENTER para chutar
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") chutar();
+        });
 
         function chutar() {
-            const input = document.getElementById("letra");
-            let letra = input.value.toUpperCase();
+            let letra = input.value.toUpperCase().trim();
             input.value = "";
             input.focus();
 
-            if (!letra || letra === " ") return;
+            // Validações básicas
+            if (!letra || !/^[A-Z]$/.test(letra)) return;
+            if (letrasTentadas.includes(letra)) {
+                alert("Você já tentou essa letra!");
+                return;
+            }
+
+            letrasTentadas.push(letra);
+            document.getElementById("tentativas").innerText = letrasTentadas.join(", ");
 
             if (secreta.includes(letra)) {
                 for(let i = 0; i < secreta.length; i++) {
-                    if(secreta[i] === letra) {
-                        exibicao[i] = letra;
-                    }
+                    if(secreta[i] === letra) exibicao[i] = letra;
                 }
             } else {
                 erros++;
             }
             
-            // Atualiza a tela
+            atualizarTela();
+            verificarFimDeJogo();
+        }
+
+        function atualizarTela() {
             document.getElementById("palavra").innerText = exibicao.join(" ");
             document.getElementById("erros").innerText = erros;
+        }
 
-            // Fim de jogo
+        function verificarFimDeJogo() {
             setTimeout(() => {
                 if (!exibicao.includes("_")) {
-                    alert("Você venceu! A palavra era XANDE");
+                    alert("🎉 Parabéns! Você venceu!");
                     location.reload();
                 } else if (erros >= 6) {
-                    alert("Game Over! Tente novamente.");
+                    alert("👻 Game Over! A palavra era " + secreta);
                     location.reload();
                 }
             }, 100);
