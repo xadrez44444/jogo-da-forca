@@ -9,14 +9,14 @@
 </head>
 <body>
     <h1>Jogo da Forca</h1>
-    <p>Erros: <span id=    <div id="Palavra">xande</div>"erros">0</span>/6</p>
+    <p>Erros: <span id=<div id="Palavra">_ _ _ _ _</div>"erros">0</span>/6</p>
     <input type="text" id="letra" maxlength="1">
     <button onclick="chutar()">Chutar</button>
 
     <script>
         let secreta = "GITHUB";
         let exibicao = ["_", "_", "_", "_", "_", "_"];
-        let erros = 0;
+        let erros = 2;
 
         function chutar() {
             let letra = document.getElementById("letra").value.toUpperCase();
