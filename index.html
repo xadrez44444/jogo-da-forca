@@ -1,40 +1,70 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-    <title>Forca do GitHub</title>
+    <meta charset="UTF-8">
+    <title>Forca do XANDE</title>
     <style>
-        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
-        #palavra { font-size: 2em; letter-spacing: 10px; }
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f4; }
+        #palavra { font-size: 3em; letter-spacing: 15px; margin: 20px; font-weight: bold; color: #333; }
+        input { padding: 10px; font-size: 1.2em; width: 50px; text-align: center; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; font-size: 1.2em; cursor: pointer; background: #28a745; color: white; border: none; border-radius: 5px; margin-left: 10px; }
+        button:hover { background: #218838; }
+        .status { margin-top: 20px; font-size: 1.2em; }
     </style>
 </head>
 <body>
-    <h1>Jogo da Forca</h1>
-    <p>Erros: <span id=<div id="Palavra">_ _ _ _ _</div>"erros">0</span>/6</p>
-    <input type="text" id="letra" maxlength="1">
+
+    <h1>🎮 Jogo da Forca</h1>
+
+    <div id="palavra">_ _ _ _ _</div>
+
+    <div class="status">
+        <p>Erros: <span id="erros" style="color: red; font-weight: bold;">0</span> / 6</p>
+    </div>
+
+    <input type="text" id="letra" maxlength="1" autofocus>
     <button onclick="chutar()">Chutar</button>
 
     <script>
-        let secreta = "GITHUB";
-        let exibicao = ["_", "_", "_", "_", "_", "_"];
-        let erros = 2;
+        // Configuração do Jogo
+        const secreta = "XANDE";
+        let exibicao = ["_", "_", "_", "_", "_"]; // 5 espaços para X-A-N-D-E
+        let erros = 0;
 
         function chutar() {
-            let letra = document.getElementById("letra").value.toUpperCase();
-            document.getElementById("letra").value = "";
-            
+            const input = document.getElementById("letra");
+            let letra = input.value.toUpperCase();
+            input.value = ""; 
+            input.focus();
+
+            if (!letra || letra === " ") return;
+
             if (secreta.includes(letra)) {
-                for(let i=0; i<secreta.length; i++) {
-                    if(secreta[i] === letra) exibicao[i] = letra;
+                // Atualiza os acertos
+                for(let i = 0; i < secreta.length; i++) {
+                    if(secreta[i] === letra) {
+                        exibicao[i] = letra;
+                    }
                 }
             } else {
+                // Conta o erro
                 erros++;
             }
             
+            // Atualiza o que o jogador vê
             document.getElementById("palavra").innerText = exibicao.join(" ");
             document.getElementById("erros").innerText = erros;
 
-            if (!exibicao.includes("_")) alert("Você venceu!");
-            if (erros >= 6) alert("Game Over!");
+            // Checa se o jogo acabou
+            setTimeout(() => {
+                if (!exibicao.includes("_")) {
+                    alert("🏆 Parabéns! Você acertou: XANDE!");
+                    location.reload();
+                } else if (erros >= 6) {
+                    alert("👻 Game Over! A palavra era XANDE.");
+                    location.reload();
+                }
+            }, 100);
         }
     </script>
 </body>
